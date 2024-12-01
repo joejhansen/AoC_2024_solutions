@@ -3,7 +3,29 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 #include "day_1.h"
+
+std::vector<std::string> get_input()
+{
+    std::vector<std::string> file_contents = {};
+    std::string file_name = "day_1.txt";
+    std::ifstream file(file_name);
+    if (file.is_open())
+    {
+        std::string line;
+        while (std::getline(file, line))
+        {
+            file_contents.push_back(line);
+        }
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Error opening file: " << file_name << std::endl;
+    }
+    return file_contents;
+}
 
 std::tuple<std::vector<int>, std::vector<int>> get_sorted_lists(std::vector<std::string> input)
 {
@@ -46,23 +68,7 @@ std::tuple<int, int> get_pair(std::string input)
 
 int day_1_part_1()
 {
-    const std::string SEPERATOR = "   ";
-    std::vector<std::string> pairs = {};
-    std::string file_name = "day_1.txt";
-    std::ifstream file(file_name);
-    if (file.is_open())
-    {
-        std::string line;
-        while (std::getline(file, line))
-        {
-            pairs.push_back(line);
-        }
-        file.close();
-    }
-    else
-    {
-        std::cerr << "Error opening file: " << file_name << std::endl;
-    }
+    std::vector<std::string> pairs = get_input();
     std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(pairs);
     int distance = 0;
     for (int i = 0; i < std::get<0>(sorted_lists).size(); i++)
@@ -70,4 +76,24 @@ int day_1_part_1()
         distance += abs(std::get<0>(sorted_lists)[i] - std::get<1>(sorted_lists)[i]);
     }
     return distance;
+}
+
+int day_1_part_2()
+{
+    std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(get_input());
+    std::map<int, int> occ_map = {};
+    int result = 0;
+    for (int left_val : std::get<0>(sorted_lists))
+    {
+        if (occ_map.count(left_val))
+        {
+            result += left_val * occ_map.at(left_val);
+        }
+        else
+        {
+            occ_map.insert({left_val, std::count(std::get<1>(sorted_lists).begin(), std::get<1>(sorted_lists).end(), left_val)});
+            result += left_val * occ_map.at(left_val);
+        }
+    }
+    return result;
 }

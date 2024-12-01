@@ -52,6 +52,8 @@
         "xlocnum": "cpp",
         "xloctime": "cpp",
         "algorithm": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "map": "cpp",
+        "xtree": "cpp"
     }
 }
