@@ -2,7 +2,23 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "day_1.h"
+
+std::tuple<std::vector<int>, std::vector<int>> get_sorted_lists(std::vector<std::string> input)
+{
+    std::vector<int> listL = {};
+    std::vector<int> listR = {};
+    for (std::string line : input)
+    {
+        std::tuple<int, int> int_pair = get_pair(line);
+        listL.push_back(std::get<0>(int_pair));
+        listR.push_back(std::get<1>(int_pair));
+    }
+    sort(listL.begin(), listL.end());
+    sort(listR.begin(), listR.end());
+    return std::make_tuple(listL, listR);
+}
 
 std::tuple<int, int> get_pair(std::string input)
 {
@@ -47,11 +63,11 @@ int day_1_part_1()
     {
         std::cerr << "Error opening file: " << file_name << std::endl;
     }
+    std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(pairs);
     int distance = 0;
-    for (std::string pair : pairs)
+    for (int i = 0; i < std::get<0>(sorted_lists).size(); i++)
     {
-        std::tuple<int, int> this_pair = get_pair(pair);
-        distance += std::abs(std::get<0>(this_pair) - std::get<1>(this_pair));
+        distance += abs(std::get<0>(sorted_lists)[i] - std::get<1>(sorted_lists)[i]);
     }
     return distance;
 }
