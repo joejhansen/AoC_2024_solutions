@@ -3,5 +3,5 @@
 
 int main()
 {
-    std::cout << DAY_1::day_1_part_2() << std::endl;
+    std::cout << DAY_1::part_2() << std::endl;
 }
