@@ -1,7 +1,7 @@
 #include <iostream>
-#include "day_1.h"
+#include "day_2.h"
 
 int main()
 {
-    std::cout << DAY_1::part_2() << std::endl;
+    std::cout << DAY_2::part_2() << std::endl;
 }
