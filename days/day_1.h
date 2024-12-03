@@ -14,4 +14,6 @@ int part_1();
 
 int part_2();
 
+void solve();
+
 #endif

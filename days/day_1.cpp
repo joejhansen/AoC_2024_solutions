@@ -77,3 +77,7 @@ int part_2() {
     }
     return result;
 }
+void solve() {
+    std::cout << part_1() << std::endl;
+    std::cout << part_2() << std::endl;
+}

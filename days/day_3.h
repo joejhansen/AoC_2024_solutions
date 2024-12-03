@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
-#ifndef DAY_2_H
-#define DAY_2
+#ifndef DAY_3_H
+#define DAY_3
 
 std::vector<std::string> get_input();
 
