@@ -16,17 +16,22 @@ if [ ! -f "days/$DAY_FILE" ]; then
 fi
 
 # Compile the files
-if ! g++ -o main.o -c -Idays main.cpp
+if ! g++ -o main.o -c -Idays -Iutils main.cpp
 then
     echo "Main compilation failed"
     exit 1
 fi
-if ! g++ -o day_"$DAY_NUMBER".o -c -Idays days/"$DAY_FILE"
+if ! g++ -o utils.o -c -Idays -Iutils utils/utils.cpp
+then
+    echo "Utils compilation failed"
+    exit 1
+fi
+if ! g++ -o day_"$DAY_NUMBER".o -c -Idays -Iutils days/"$DAY_FILE"
 then
     echo "Day $DAY_NUMBER compilation failed"
     exit 1
 fi
-if ! g++ -o app main.o day_"$DAY_NUMBER".o
+if ! g++ -o app main.o day_"$DAY_NUMBER".o utils.o
 then
     echo "Linking failed"
     exit 1

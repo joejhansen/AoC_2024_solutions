@@ -3,22 +3,7 @@
 #include <vector>
 #include <string>
 #include "day_2.h"
-
-std::vector<std::string> get_input() {
-    std::vector<std::string> file_contents = {};
-    std::string file_name = "input/day_2.txt";
-    std::ifstream file(file_name);
-    if (file.is_open()) {
-        std::string line;
-        while (std::getline(file, line)) {
-            file_contents.push_back(line);
-        }
-        file.close();
-    } else {
-        std::cerr << "Error opening file: " << file_name << std::endl;
-    }
-    return file_contents;
-}
+#include "utils.h"
 
 std::vector<int> split_line(std::string input, char deliminator) {
     std::vector<int> res = {};
@@ -67,7 +52,7 @@ bool is_safe(std::vector<int>input) {
 }
 
 int part_1() {
-    std::vector<std::string> input = get_input();
+    std::vector<std::string> input = UTILS::get_input("input/day_2.txt");
     int safe_count = 0;
     for (std::string line : input) {
         if (is_safe(split_line(line, ' '))) {
@@ -78,7 +63,7 @@ int part_1() {
 }
 
 int part_2() {
-    std::vector<std::string> input = get_input();
+    std::vector<std::string> input = UTILS::get_input("input/day_2.txt");
     int safe_count = 0;
     for (std::string line : input) {
         std::vector<int> split_ints = split_line(line, ' ');

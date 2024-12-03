@@ -5,22 +5,7 @@
 #include <algorithm>
 #include <map>
 #include "day_1.h"
-
-std::vector<std::string> get_input() {
-    std::vector<std::string> file_contents = {};
-    std::string file_name = "input/day_1.txt";
-    std::ifstream file(file_name);
-    if (file.is_open()) {
-        std::string line;
-        while (std::getline(file, line)) {
-            file_contents.push_back(line);
-        }
-        file.close();
-    } else {
-        std::cerr << "Error opening file: " << file_name << std::endl;
-    }
-    return file_contents;
-}
+#include "utils.h"
 
 std::tuple<int, int> get_pair(std::string input) {
     std::string val1;
@@ -54,7 +39,7 @@ std::tuple<std::vector<int>, std::vector<int>> get_sorted_lists(std::vector<std:
 }
 
 int part_1() {
-    std::vector<std::string> pairs = get_input();
+    std::vector<std::string> pairs = UTILS::get_input("input/day_1.txt");
     std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(pairs);
     int distance = 0;
     for (int i = 0; i < std::get<0>(sorted_lists).size(); i++) {
@@ -64,7 +49,7 @@ int part_1() {
 }
 
 int part_2() {
-    std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(get_input());
+    std::tuple<std::vector<int>, std::vector<int>> sorted_lists = get_sorted_lists(UTILS::get_input("input/day_1.txt"));
     std::map<int, int> occ_map = {};
     int result = 0;
     for (int left_val : std::get<0>(sorted_lists)) {
@@ -77,6 +62,7 @@ int part_2() {
     }
     return result;
 }
+
 void solve() {
     std::cout << part_1() << std::endl;
     std::cout << part_2() << std::endl;
