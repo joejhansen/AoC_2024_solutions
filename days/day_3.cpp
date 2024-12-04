@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <regex>
+#include "day_3.h"
 #include "utils.h"
 
 int mul_from_str(std::string mul_str) {
