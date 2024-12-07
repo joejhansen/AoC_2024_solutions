@@ -5,22 +5,7 @@
 #include "day_2.h"
 #include "utils.h"
 
-std::vector<int> split_line(std::string input, char deliminator) {
-    std::vector<int> res = {};
-    std::string tmp = "";
-    for (int i = 0; i < input.length(); i++) {
-        if (input[i] == deliminator) {
-            res.push_back(stoi(tmp));
-            tmp = "";
-        } else {
-            tmp = tmp + input[i];
-            if (i == input.length() - 1) {
-                res.push_back(stoi(tmp));
-            }
-        }
-    }
-    return res;
-}
+
 
 bool is_safe(std::vector<int>input) {
     bool failed = false;
@@ -55,7 +40,7 @@ int part_1() {
     std::vector<std::string> input = UTILS::get_input("input/day_2.txt");
     int safe_count = 0;
     for (std::string line : input) {
-        if (is_safe(split_line(line, ' '))) {
+        if (is_safe(UTILS::split_string_to_ints(line, ' '))) {
             safe_count += 1;
         }
     }
@@ -66,7 +51,7 @@ int part_2() {
     std::vector<std::string> input = UTILS::get_input("input/day_2.txt");
     int safe_count = 0;
     for (std::string line : input) {
-        std::vector<int> split_ints = split_line(line, ' ');
+        std::vector<int> split_ints = UTILS::split_string_to_ints(line, ' ');
         if (is_safe(split_ints)) {
             safe_count += 1;
         } else {

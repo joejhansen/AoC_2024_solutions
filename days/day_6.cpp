@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <set>
 #include <map>
+
 enum Direction {
     UP,
     DOWN,
@@ -128,7 +129,70 @@ std::set<std::tuple<int, int>> move_guard_get_travelled(std::vector<std::string>
     return travelled_pos;
 }
 
-bool move_guard_does_loop(std::vector<std::string>& guard_map, std::tuple<int, int> block_pos) {
+bool move_guard_does_loop(std::vector<std::string>& guard_map, std::tuple<int, int> current_pos, std::tuple<int, int> block_pos, std::map<std::tuple<int, int>, std::set<char>>& visited_map) {
+    guard_map.at(std::get<0>(block_pos)).at(std::get<1>(block_pos)) = '#';
+    // switch (guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos))) {
+    //     case '^':
+    //         break;
+    //     case '>':
+    //         break;
+    //     case 'v':
+    //         break;
+    //     case '<':
+    //         break;
+    //     default:
+    //         throw std::runtime_error("Current pos passed as arg not a guard -> " + std::to_string(std::get<0>(current_pos)) + " | " + std::to_string(std::get<1>(current_pos)));
+    //         break;
+    // }
+    // std::tuple<int, int> current_pos = get_guard_pos(guard_map);
+    int rise;
+    int run;
+    char turn_char;
+    while (true) {
+        switch (guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos))) {
+            case '^':
+                rise = 1, run = 0, turn_char = '>';
+                break;
+            case '>':
+                rise = 0, run = 1, turn_char = 'v';
+                break;
+            case 'v':
+                rise = -1, run = 0, turn_char = '<';
+                break;
+            case '<':
+                rise = 0, run = -1, turn_char = '^';
+                break;
+            default:
+                throw std::runtime_error("Current pos not a guard -> " + std::to_string(std::get<0>(current_pos)) + " | " + std::to_string(std::get<1>(current_pos)));
+                break;
+        }
+
+        if (!visited_map.count(current_pos)) {
+            visited_map.insert({ current_pos, {guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos))} });
+        } else if (visited_map.at(current_pos).count(guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)))) {
+            return true;
+        } else {
+            visited_map.at(current_pos).insert(guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)));
+        }
+
+        if (std::get<0>(current_pos) + -rise < 0
+            || std::get<0>(current_pos) + -rise >= guard_map.size()
+            || std::get<1>(current_pos) + run < 0
+            || std::get<1>(current_pos) + run >= guard_map.front().length()) {
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = 'X';
+            break;
+        } else if (guard_map.at(std::get<0>(current_pos) + -rise).at(std::get<1>(current_pos) + run) == '#') {
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = turn_char;
+        } else {
+            guard_map.at(std::get<0>(current_pos) + -rise).at(std::get<1>(current_pos) + run) = guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos));
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = 'X';
+            current_pos = std::make_tuple(std::get<0>(current_pos) + -rise, std::get<1>(current_pos) + run);
+        }
+    }
+    return false;
+}
+
+bool move_guard_does_loop_old(std::vector<std::string>& guard_map, std::tuple<int, int> block_pos) {
     guard_map.at(std::get<0>(block_pos)).at(std::get<1>(block_pos)) = '#';
     std::tuple<int, int> current_pos = get_guard_pos(guard_map);
     std::map<std::tuple<int, int>, std::set<char>> visited_map = {};
@@ -182,6 +246,63 @@ int part_1() {
     move_guard(guard_map);
     return count_in_2d_vec(guard_map, 'X');
 }
+
+int better_part_2() {
+    std::vector<std::string> guard_map = UTILS::get_input("input/day_6.txt");
+    std::tuple<int, int> current_pos = get_guard_pos(guard_map);
+    int rise;
+    int run;
+    char turn_char;
+    int res = 0;
+    std::map<std::tuple<int, int>, std::set<char>> visited_map = {};
+    // std::map<std::tuple<int, int>, std::set<char>> visited_map = {{current_pos, guard_map.at(std::get<0>(current_pos)).at()}};
+    while (true) {
+
+        switch (guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos))) {
+            case '^':
+                rise = 1, run = 0, turn_char = '>';
+                break;
+            case '>':
+                rise = 0, run = 1, turn_char = 'v';
+                break;
+            case 'v':
+                rise = -1, run = 0, turn_char = '<';
+                break;
+            case '<':
+                rise = 0, run = -1, turn_char = '^';
+                break;
+            default:
+                throw std::runtime_error("Current pos not a guard -> " + std::to_string(std::get<0>(current_pos)) + " | " + std::to_string(std::get<1>(current_pos)));
+                break;
+        }
+
+        if (std::get<0>(current_pos) + -rise < 0
+            || std::get<0>(current_pos) + -rise >= guard_map.size()
+            || std::get<1>(current_pos) + run < 0
+            || std::get<1>(current_pos) + run >= guard_map.front().length()) {
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = 'X';
+            break;
+        } else if (guard_map.at(std::get<0>(current_pos) + -rise).at(std::get<1>(current_pos) + run) == '#') {
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = turn_char;
+        } else {
+            auto new_map(guard_map);
+            res += move_guard_does_loop_old(new_map, std::make_tuple(std::get<0>(current_pos) + -rise, std::get<1>(current_pos) + run));
+            // res += move_guard_does_loop(new_map, current_pos, std::make_tuple(std::get<0>(current_pos) + -rise, std::get<1>(current_pos) + run), visited_map);
+            // res += move_guard_does_loop(new_map, current_pos, std::make_tuple(std::get<0>(current_pos) + -rise, std::get<1>(current_pos) + run), visited_map);
+            guard_map.at(std::get<0>(current_pos) + -rise).at(std::get<1>(current_pos) + run) = guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos));
+            guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)) = 'X';
+            current_pos = std::make_tuple(std::get<0>(current_pos) + -rise, std::get<1>(current_pos) + run);
+        }
+        if (!visited_map.count(current_pos)) {
+            visited_map.insert({ current_pos, {guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos))} });
+        } else if (visited_map.at(current_pos).count(guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)))) {
+        } else {
+            visited_map.at(current_pos).insert(guard_map.at(std::get<0>(current_pos)).at(std::get<1>(current_pos)));
+        }
+
+    }
+    return res;
+}
 int part_2() { // i know it's not good but it works so shut up
     // i could probably get this down to n^2
     // traverse the original map assuming it doesn't loop and proactively put blockers in the way of every next step
@@ -197,12 +318,12 @@ int part_2() { // i know it's not good but it works so shut up
     int res = 0;
     for (std::tuple<int, int> pos : travelled_pos) {
         guard_map = original_map;
-        res += move_guard_does_loop(guard_map, pos);
+        res += move_guard_does_loop_old(guard_map, pos);
     }
     return res;
 }
 
 void solve() {
     // std::cout << part_1() << std::endl;
-    std::cout << part_2() << std::endl;
+    std::cout << better_part_2() << std::endl; // should be 1663;
 }
