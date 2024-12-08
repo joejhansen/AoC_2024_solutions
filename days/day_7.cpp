@@ -6,6 +6,7 @@
 #include <tuple>
 #include <stdexcept>
 #include <cmath>
+#include <algorithm>
 
 // we're gonna think of this like building a binary number, but with + and * instead of 0 and 1
 // if there ar 7 parts, that's a 6 bit value
@@ -33,6 +34,34 @@ std::string build_first_operation(int length) {
     }
     return res;
 }
+std::string build_first_operation(int length, char first_bit) {
+    std::string res = "";
+    for (int i = 0; i < length; i++) {
+        res = res + first_bit;
+    }
+    return res;
+}
+std::string increment_operations(std::string operations, std::string op_ranks) {
+    for (int i = 0; i < operations.length(); i++) {
+
+        auto maybe_value = std::find(op_ranks.begin(), op_ranks.end(), operations[i]);
+        if (maybe_value == op_ranks.end()) {
+            throw std::runtime_error("Operation not in ranks!");
+        }
+
+        auto index_of = maybe_value - op_ranks.begin();
+        if (index_of < 0 || index_of > op_ranks.size() - 1) {
+            throw std::runtime_error("Index of op_ranks out of bounds!");
+        }
+
+        if (index_of == op_ranks.size() - 1) {
+            operations[i] = op_ranks.front();
+        } else {
+            operations[i] = op_ranks[index_of+1];
+            break;
+        }
+    }
+}
 bool is_operation_maxed(std::string operation) {
     for (char ch : operation) {
         if (ch == '+') {
@@ -41,6 +70,20 @@ bool is_operation_maxed(std::string operation) {
             continue;
         } else {
             throw std::runtime_error("Operation is invalid!");
+        }
+    }
+    return true;
+}
+bool is_operation_maxed(std::string operation, std::vector<char> op_ranks) {
+    for (char ch : operation) {
+        auto maybe_value = std::find(op_ranks.begin(), op_ranks.end(), ch);
+        if (maybe_value == op_ranks.end()) {
+            throw std::runtime_error("Operation not in ranks!");
+        }
+        if (ch == op_ranks.back()) {
+            continue;
+        } else {
+            return false;
         }
     }
     return true;
@@ -109,7 +152,7 @@ bool is_operation_maxed_part_2(std::string operation) {
 
 
 unsigned long long does_part_build_to_sum_how_much_part_2(unsigned long long sum, std::vector<unsigned long long> parts) {
-    std::string curr_operations = build_first_operation(parts.size() - 1);
+    std::string curr_operations = build_first_operation(parts.size() - 1, '+');
     unsigned long long loop_checker = 0; // this should take no more than 2^operations.size() iterations
     unsigned long long max_loops = pow(3, curr_operations.size()) + 1;
     while (true) {
@@ -119,7 +162,7 @@ unsigned long long does_part_build_to_sum_how_much_part_2(unsigned long long sum
                 tmp_sum = tmp_sum + parts[i];
             } else if (curr_operations[i - 1] == '*') {
                 tmp_sum = tmp_sum * parts[i];
-            }else if(curr_operations[i - 1] == '|'){
+            } else if (curr_operations[i - 1] == '|') {
                 tmp_sum = stoull(std::to_string(tmp_sum) + std::to_string(parts[i]));
             } else {
                 throw std::runtime_error("Found an invalid operation!");
@@ -164,7 +207,7 @@ unsigned long long part_1() {
 }
 
 unsigned long long part_2() { // this takes a loooooooooooooooooooooooong time, but it works!
-    std::vector<std::string> input = UTILS::get_input("input/day_7.txt");
+    std::vector<std::string> input = UTILS::get_input("input/day_7_example.txt");
     unsigned long long res = 0;
     for (std::string line : input) {
         std::tuple<unsigned long long, std::vector<unsigned long long>> sum_and_parts = get_sum_and_parts(line);
