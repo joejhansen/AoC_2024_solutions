@@ -20,6 +20,7 @@ std::vector<long> get_fragmented_file_block(std::string input_str) {
     }
     return res;
 }
+
 void defrag_file_block(std::vector<long>& file_block) {
     int index_left = 0;
     int index_right = file_block.size() - 1;
@@ -36,6 +37,7 @@ void defrag_file_block(std::vector<long>& file_block) {
         while (file_block[index_left] >= 0) index_left++;
     }
 }
+
 unsigned long long calculate_checksum(std::vector<long>& file_block) {
     unsigned long long res = 0;
     for (long i = 0; i < file_block.size(); i++) {
@@ -46,6 +48,7 @@ unsigned long long calculate_checksum(std::vector<long>& file_block) {
     }
     return res;
 }
+
 unsigned long long part_1() {
     std::string input = get_input("input/day_9.txt")[0];
     std::vector<long> file_block = get_fragmented_file_block(input);
@@ -62,7 +65,7 @@ void defrag_file_block_dont_break(std::vector<long>& file_block) {
             break;
         }
     }
-    if (current_id == -1) throw std::runtime_error("Something went wrong finding the find index and id");
+    if (current_id == -1) throw std::runtime_error("Something went wrong finding the first index and id");
     for (; current_id >= 0; current_id--) {
         int curr_block_size = 0;
         int curr_index = 0;
@@ -104,6 +107,7 @@ unsigned long long calculate_checksum_whole_system(std::vector<long>& file_block
     }
     return res;
 }
+
 unsigned long long part_2() {
     std::string input = get_input("input/day_9.txt")[0];
     std::vector<long> file_block = get_fragmented_file_block(input);
