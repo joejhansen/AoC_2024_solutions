@@ -24,12 +24,63 @@ std::vector<int> split_string_to_ints(std::string input, char delimiter) {
     std::string tmp = "";
     for (int i = 0; i < input.length(); i++) {
         if (input[i] == delimiter) {
-            res.push_back(stoi(tmp));
+            if (tmp != "") res.push_back(stoi(tmp));
             tmp = "";
         } else {
             tmp = tmp + input[i];
             if (i == input.length() - 1) {
                 res.push_back(stoi(tmp));
+            }
+        }
+    }
+    return res;
+}
+
+std::vector<long> split_string_to_longs(std::string input, char delimiter) {
+    std::vector<long> res = {};
+    std::string tmp = "";
+    for (int i = 0; i < input.length(); i++) {
+        if (input[i] == delimiter) {
+            if (tmp != "") res.push_back(stol(tmp));
+            tmp = "";
+        } else {
+            tmp = tmp + input[i];
+            if (i == input.length() - 1) {
+                res.push_back(stol(tmp));
+            }
+        }
+    }
+    return res;
+}
+
+
+std::vector<long long> split_string_to_long_longs(std::string input, char delimiter) {
+    std::vector<long long> res = {};
+    std::string tmp = "";
+    for (int i = 0; i < input.length(); i++) {
+        if (input[i] == delimiter) {
+            if (tmp != "") res.push_back(stoll(tmp));
+            tmp = "";
+        } else {
+            tmp = tmp + input[i];
+            if (i == input.length() - 1) {
+                res.push_back(stoll(tmp));
+            }
+        }
+    }
+    return res;
+}
+std::vector<unsigned long long> split_string_to_unsigned_long_longs(std::string input, char delimiter) {
+    std::vector<unsigned long long> res = {};
+    std::string tmp = "";
+    for (int i = 0; i < input.length(); i++) {
+        if (input[i] == delimiter) {
+            if (tmp != "") res.push_back(stoull(tmp));
+            tmp = "";
+        } else {
+            tmp = tmp + input[i];
+            if (i == input.length() - 1) {
+                res.push_back(stoull(tmp));
             }
         }
     }

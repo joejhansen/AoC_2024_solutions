@@ -11,20 +11,16 @@ void get_end_positions_from(std::vector<std::string>& input_field, std::set<std:
     for (int i = 0; i < 4;i++) {
         switch (i) {
             case 0:
-                rise = 1;
-                run = 0;
+                rise = 1, run = 0;
                 break;
             case 1:
-                rise = 0;
-                run = 1;
+                rise = 0, run = 1;
                 break;
             case 2:
-                rise = -1;
-                run = 0;
+                rise = -1, run = 0;
                 break;
             case 3:
-                rise = 0;
-                run = -1;
+                rise = 0, run = -1;
                 break;
             default:
                 break;
@@ -45,6 +41,22 @@ void get_end_positions_from(std::vector<std::string>& input_field, std::set<std:
         }
     }
 }
+
+int part_1() {
+    std::vector<std::string> input_field = UTILS::get_input("input/day_10.txt");
+    int res = 0;
+    for (int row = 0; row < input_field.size(); row++) {
+        for (int col = 0; col < input_field.front().length(); col++) {
+            if (input_field[row][col] == '0') {
+                std::set<std::tuple<int, int>> known_endpoints = {};
+                get_end_positions_from(input_field, known_endpoints, std::make_tuple(row, col));
+                res += known_endpoints.size();
+            }
+        }
+    }
+    return res;
+}
+
 void get_trail_paths_from(std::vector<std::string>& input_field, std::vector<std::tuple<int, int>>& known_endpoints, std::tuple<int, int> from_position) { // all i did was change it from a set to a vector lol
     char curr_height = input_field[std::get<0>(from_position)][std::get<1>(from_position)];
     int rise;
@@ -52,20 +64,16 @@ void get_trail_paths_from(std::vector<std::string>& input_field, std::vector<std
     for (int i = 0; i < 4;i++) {
         switch (i) {
             case 0:
-                rise = 1;
-                run = 0;
+                rise = 1, run = 0;
                 break;
             case 1:
-                rise = 0;
-                run = 1;
+                rise = 0, run = 1;
                 break;
             case 2:
-                rise = -1;
-                run = 0;
+                rise = -1, run = 0;
                 break;
             case 3:
-                rise = 0;
-                run = -1;
+                rise = 0, run = -1;
                 break;
             default:
                 break;
@@ -87,20 +95,6 @@ void get_trail_paths_from(std::vector<std::string>& input_field, std::vector<std
     }
 }
 
-int part_1() {
-    std::vector<std::string> input_field = UTILS::get_input("input/day_10.txt");
-    int res = 0;
-    for (int row = 0; row < input_field.size(); row++) {
-        for (int col = 0; col < input_field.front().length(); col++) {
-            if (input_field[row][col] == '0') {
-                std::set<std::tuple<int, int>> known_endpoints = {};
-                get_end_positions_from(input_field, known_endpoints, std::make_tuple(row, col));
-                res += known_endpoints.size();
-            }
-        }
-    }
-    return res;
-}
 int part_2() {
     std::vector<std::string> input_field = UTILS::get_input("input/day_10.txt");
     int res = 0;
